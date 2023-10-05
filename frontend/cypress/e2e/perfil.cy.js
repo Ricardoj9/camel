@@ -20,25 +20,3 @@ describe('Página de Perfil', () => {
       cy.contains('button', 'Salvar').click();
     })
   })
-
-
-
-
-
-
-
-describe('Página de Login', () => {
-    it('Primeiro será inserido o nome no campo "nome", Segundo será inserido a senha no campo "senha"', () => {
-      cy.visit('http://127.0.0.1:5500/frontend/login/')
-      cy.contains('a', 'Registre-se').click();
-      cy.get('[name="email"]').type('junior@junior.com');
-      cy.wait(2000);
-      cy.get('[name="name"]').type('ricardo');
-      cy.wait(2000);
-      cy.get('[name="password"]').type('123');
-      cy.wait(2000);
-      cy.get('[name="confirmPassword"]').type('123');
-      cy.wait(2000);
-      cy.contains('a', 'Cadastrar').click();
-    })
-  })
