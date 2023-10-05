@@ -1,5 +1,5 @@
 describe('Página de Perfil', () => {
-    it('Atualizar dados de perfil', () => {
+    it('Inserir CEP, rua, número, complemento, bairro, cidade, uf, telefone e clicar em salvar', () => {
       cy.visit('http://127.0.0.1:5500/frontend/perfil/')
       cy.get('#cep').type('55036-050');
       cy.wait(1500);

@@ -1,5 +1,5 @@
 describe('Página de Login', () => {
-  it('Login para entrar na conta', () => {
+  it('Clicar em detalhes de usuário, clicar em entrar, inserir email e senha', () => {
     cy.visit('http://127.0.0.1:5500/frontend/index.html');
     cy.wait(1500);
     cy.get('details.user').eq(1).click({ force: true });
