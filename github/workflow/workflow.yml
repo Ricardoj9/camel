@@ -1,6 +1,6 @@
 name: Continuos Integration
 
-on: pull_request
+on: push
 
 jobs:
   continuos-integration:
@@ -16,3 +16,4 @@ jobs:
         run: |
           npm install
           npm run test
+          npm install jest
