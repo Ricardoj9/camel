@@ -2,6 +2,7 @@ const Produto = require("../models/produto");
 const Subcategoria = require("../models/subcategoria");
 
 const {
+  validateId,
   validateName,
   validatePrice,
   validateDescription,
@@ -9,6 +10,7 @@ const {
   validateBrand,
   validateAvailable,
   validateSubcategory,
+  validateProduct,
 } = require("../helpers/validations");
 
 class ProdutoController {
@@ -89,14 +91,17 @@ class ProdutoController {
   }
 
   static async getProduto(req, res) {
-    const id = req.params.id;
-
-    const produto = await Produto.findByPk(id);
-
-    if (!produto) {
-      res.status(422).json({ message: "Produto não encontrado." });
-      return;
+    let id = req.params.id;
+    if (!isNaN(id)) {
+      id = parseInt(id);
     }
+    const validateProductResult = await validateProduct(id);
+    if (validateProductResult) {
+      return res
+        .status(validateProductResult.status)
+        .json(validateProductResult);
+    }
+    const produto = await Produto.findByPk(id);
 
     res.status(200).json({ produto });
   }
@@ -104,11 +109,11 @@ class ProdutoController {
   static async getProdutosBySubcategoria(req, res) {
     const id = req.params.id;
 
-    const subcategoria = await Subcategoria.findByPk(id);
-    console.log("Entrou");
-    if (!subcategoria) {
-      res.status(422).json({ message: "Informe uma subcategoria válida" });
-      return;
+    const validateSubcategoryResult = await validateSubcategory(id);
+    if (validateSubcategoryResult) {
+      return res
+        .status(validateSubcategoryResult.status)
+        .json(validateSubcategoryResult);
     }
 
     const produtos = await Produto.findAll({ where: { id_subcategoria: id } });
@@ -128,70 +133,62 @@ class ProdutoController {
       id_subcategoria,
     } = req.body;
 
-    // validações
-    if (!id) {
-      res.status(422).json({ message: "O id é obrigatório." });
-      return;
+    // validações 
+    const validateIdResult = validateId(id);
+    if (validateIdResult) {
+      return res.status(validateIdResult.status).json(validateIdResult);
     }
 
-    const produtoExiste = await Produto.findByPk(id);
-    if (!produtoExiste) {
-      res.status(404).json({ message: "Produto não encontrado." });
-      return;
+    const validateProductResult = await validateProduct(id);
+    if (validateProductResult) {
+      return res
+        .status(validateProductResult.status)
+        .json(validateProductResult);
     }
 
-    if (!nome) {
-      res.status(422).json({ message: "O nome é obrigatório." });
-      return;
+    const validateNameResult = validateName(nome);
+    if (validateNameResult) {
+      return res.status(validateNameResult.status).json(validateNameResult);
     }
 
-    if (!preco) {
-      res.status(422).json({ message: "O preco é obrigatório." });
-      return;
+    const validatePriceResult = validatePrice(preco);
+    if (validatePriceResult) {
+      return res.status(validatePriceResult.status).json(validatePriceResult);
     }
 
-    if (isNaN(preco)) {
-      res.status(422).json({ message: "Informe um valor numérico." });
-      return;
+    const validateDescriptionResult = validateDescription(descricao);
+    if (validateDescriptionResult) {
+      return res
+        .status(validateDescriptionResult.status)
+        .json(validateDescriptionResult);
     }
 
-    if (!descricao) {
-      res.status(422).json({ message: "A descrição é obrigatória" });
-      return;
+    const validateDatasheetResult = validateDatasheet(ficha_tecnica);
+    if (validateDatasheetResult) {
+      return res
+        .status(validateDatasheetResult.status)
+        .json(validateDatasheetResult);
     }
 
-    if (!ficha_tecnica) {
-      res.status(422).json({ message: "A ficha técnica é obrigatória" });
-      return;
+    const validateBrandResult = validateBrand(marca);
+    if (validateBrandResult) {
+      return res.status(validateBrandResult.status).json(validateBrandResult);
     }
 
-    if (!marca) {
-      res.status(422).json({ message: "A marca é obrigatória" });
-      return;
+    const validateAvailableResult = validateAvailable(disponivel);
+    if (validateAvailableResult) {
+      return res
+        .status(validateAvailableResult.status)
+        .json(validateAvailableResult);
     }
 
-    if (disponivel == undefined) {
-      res.status(422).json({ message: "A disponibilidade é obrigatória" });
-      return;
-    }
-
-    if (typeof disponivel !== "boolean") {
-      res
-        .status(422)
-        .json({ message: "É esperado um valor booleano na disponibilidade" });
-      return;
-    }
-
-    if (!id_subcategoria) {
-      res.status(422).json({ message: "A subcategoria é obrigatória" });
-      return;
-    }
-
-    const subcategoriaExiste = await Subcategoria.findByPk(id_subcategoria);
-
-    if (!subcategoriaExiste) {
-      res.status(404).json({ message: "Informe uma subcategoria válida" });
-      return;
+    const validateSubcategoryResult = await validateSubcategory(
+      id_subcategoria
+    );
+    if (validateSubcategoryResult) {
+      return res
+        .status(validateSubcategoryResult.status)
+        .json(validateSubcategoryResult);
     }
 
     const produtoAtualizado = {
