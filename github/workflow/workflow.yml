@@ -16,4 +16,4 @@ jobs:
         run: |
           npm install
           npm run test
-          npm install jest
+          npm install --save-dev jest
